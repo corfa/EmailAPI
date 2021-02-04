@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  server:
+    build: .
+    container_name: application
+    ports:
+    - "8000:8000"
+    command: sh -c "cd /homework_for_course
+             && alembic upgrade head
+             && python main.py"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    restart: always
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+  database:
+    ports:
+      - "5432:5432"
+    image: postgres
+    container_name: app-database
+    env_file:
+      - .env
